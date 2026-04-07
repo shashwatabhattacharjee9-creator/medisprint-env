@@ -12,7 +12,7 @@ MODEL_NAME = os.getenv("MODEL_NAME", "meta-llama/Meta-Llama-3.1-8B-Instruct")
 HF_TOKEN = os.getenv("HF_TOKEN", "dummy_token_for_local_test")
 
 # The URL where our Docker container / FastAPI server will be running
-ENV_URL = "http://localhost:8080"
+ENV_URL = "https://shashwata-bhattacharjee-medisprint-env.hf.space"
 TASK_NAME = "MediSprint-Triage-Extraction"
 BENCHMARK = "OpenEnv-Healthcare"
 MAX_STEPS = 5
