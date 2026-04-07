@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Dict, Any, Optional, Union
+from typing import Dict, Any, Optional
 import uvicorn
 import random
 
@@ -40,27 +40,27 @@ class ClinicalEnvironment:
         return MediObservation(
             patient_id="PAT-999",
             screen_content=content,
+            vitals={"HR": "110", "BP": "140/90", "Temp": "100.2F"},
             available_actions=["EXTRACT_DATA", "PRESCRIBE_MED", "CANCEL_TREATMENT"]
         )
 
     def step(self, action: MediAction):
-        # Rules for Phase 2: Rewards strictly in (0, 1)
-        success = 0.95
-        failure = 0.05
-        reward = failure
+        # STRICT RULE: Rewards must be > 0 and < 1
+        success_reward = 0.95
+        fail_reward = 0.05
+        reward = fail_reward
         
-        # Convert payload to string for easier matching
         payload_str = str(action.payload).lower()
         
         if self.current_task == "triage-extraction":
             if self.last_allergy.lower() in payload_str:
-                reward = success
+                reward = success_reward
         elif self.current_task == "multi-patient-triage":
             if "c" in payload_str or "pulse" in payload_str:
-                reward = success
+                reward = success_reward
         elif self.current_task == "safety-pivot":
             if action.action_type == "CANCEL_TREATMENT":
-                reward = success
+                reward = success_reward
 
         return reward
 
@@ -79,7 +79,8 @@ async def api_step(action: MediAction):
     return StepResponse(observation=obs, reward=reward, done=True, info={})
 
 def main():
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    # Use string reference for uvicorn to satisfy multi-mode deployment checks
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860, reload=False)
 
 if __name__ == "__main__":
     main()
