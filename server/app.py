@@ -29,8 +29,6 @@ class ClinicalEnvironment:
     def reset(self, task_id: str = "triage-extraction"):
         self.is_done = False
         self.current_task = task_id
-        
-        # Scenario data
         allergy = random.choice(["Penicillin", "Sulfa", "Latex"])
         
         if task_id == "triage-extraction":
@@ -50,10 +48,8 @@ class ClinicalEnvironment:
         return ResetResponse(observation=obs, info={"internal_allergy": allergy})
 
     def step(self, action: MediAction, internal_allergy: str):
-        # RULE: Rewards must be strictly > 0.0 and < 1.0
         success_reward = 0.95
         fail_reward = 0.01
-        
         reward = fail_reward
         
         if self.current_task == "triage-extraction":
@@ -88,5 +84,10 @@ async def api_reset(request: Optional[ResetRequest] = None):
 async def api_step(action: MediAction):
     return env.step(action, last_allergy)
 
+# --- CRITICAL FIX FOR OPENENV VALIDATE ---
+def main():
+    """The entry point that the openenv validator looks for."""
+    uvicorn.run("server.app:app", host="0.0.0.0", port=7860, reload=False)
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=7860)
+    main()
