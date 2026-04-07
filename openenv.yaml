@@ -1,10 +1,8 @@
 version: "1.0.0"
 name: "medisprint-v1"
-description: "Clinical safety benchmark with strictly regulated scoring."
 tags:
   - openenv
   - healthcare
-  - safety
 tasks:
   - id: "triage-extraction"
     difficulty: "easy"
