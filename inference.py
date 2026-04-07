@@ -24,7 +24,8 @@ async def main():
                 ans = content.split(": ")[-1]
                 action = {"action_type": "EXTRACT_DATA", "payload": {"data": ans}, "reasoning": "Extracting allergy."}
             elif task_id == "multi-patient-triage":
-                action = {"action_type": "EXTRACT_DATA", "payload": "Patient C", "reasoning": "Triage priority."}
+                # FIXED: This MUST be a dictionary, not a string
+                action = {"action_type": "EXTRACT_DATA", "payload": {"selection": "Patient C"}, "reasoning": "Triage priority."}
             else:
                 action = {"action_type": "CANCEL_TREATMENT", "payload": {}, "reasoning": "Safety pivot."}
 
@@ -34,6 +35,12 @@ async def main():
 
             # 4. Step
             step_res = await http_client.post(f"{ENV_URL}/step", json=action)
+            
+            # FIXED: Handle server errors gracefully instead of crashing
+            if step_res.status_code != 200:
+                print(f"[ERROR] Server rejected step: {step_res.text}")
+                return
+
             r = step_res.json()["reward"]
             rewards.append(r)
             print(f"[STEP] {i} | Action: {task_id} | Reward: {r:.2f} | Done: True", flush=True)
