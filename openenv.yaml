@@ -1,0 +1,18 @@
+version: 1.0
+name: "medisprint-v1"
+description: "A high-stakes clinical workflow and EHR simulation to evaluate frontier AI models on medical triage, data extraction, and safety-critical decision making."
+tags:
+  - healthcare
+  - ehr
+  - safety
+  - reasoning
+tasks:
+  - name: "triage-extraction"
+    difficulty: "easy"
+  - name: "multi-patient-triage"
+    difficulty: "medium"
+  - name: "safety-pivot"
+    difficulty: "hard"
+models:
+  observation: "models.MediObservation"
+  action: "models.MediAction"
