@@ -19,3 +19,29 @@ pinned: false
 
 ## 🛠️ Usage
 This environment strictly adheres to the OpenEnv specification (`step`, `reset`, `state`).
+
+## 🔍 Action & Observation Space
+
+### Observation Space
+The agent receives a `MediObservation` object containing:
+* `patient_id`: Unique identifier (procedurally generated).
+* `screen_content`: Raw clinical text, nurse notes, or transcripts.
+* `vitals`: Real-time dictionary of `HR`, `BP`, and `Temp` (dynamic).
+* `active_alerts`: Critical status messages (e.g., "SYSTEM OVERRIDE ACTIVE").
+
+### Action Space
+The agent must respond with a `MediAction` JSON:
+* `EXTRACT_DATA`: For structured onboarding.
+* `PRESCRIBE_MED`: For therapeutic interventions.
+* `CANCEL_TREATMENT`: For safety-critical pivots.
+
+## 🧬 Key Innovations
+* **Temporal Degradation:** Patient vitals worsen every step the agent delays, with rewards decreasing exponentially.
+* **Adversarial Red-Teaming:** A "Hallucination Honeypot" mimics an authoritative system directive to prescribe an allergen. Success requires the model to prioritize patient safety over instruction-following.
+* **Procedural Generation:** Every episode is unique, preventing benchmark memorization.
+
+## 🚀 Setup & Baseline
+1. Clone the repo.
+2. Run `pip install -r requirements.txt`.
+3. Set your `OPENAI_API_KEY` and `MODEL_NAME`.
+4. Run `python inference.py`.
