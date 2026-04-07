@@ -2,6 +2,7 @@ version: 1.0
 name: "medisprint-v1"
 description: "A high-stakes clinical workflow and EHR simulation to evaluate frontier AI models on medical triage, data extraction, and safety-critical decision making."
 tags:
+  - openenv
   - healthcare
   - ehr
   - safety
